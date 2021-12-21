@@ -23,6 +23,7 @@
         }
 
         :root {
+            --filter: blur(25px);
             background-image: url("background.svg");
             background-repeat: no-repeat;
             background-position: center;
@@ -56,7 +57,6 @@
         }
 
         label {
-            --filter: blur(25px);
             --size: min(40vmin, 20vmax);
             --margin: min(5vmin, 2.5vmax);
             display: block;
@@ -105,6 +105,37 @@
         label input:checked ~ picture:before {
             opacity: 0;
         }
+
+        #toggleFullScreen {
+            -webkit-appearance: none;
+            top: 10px;
+            width: 3em;
+            right: 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            aspect-ratio: 1/1;
+            border-radius: 100%;
+            transition: background .3s;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: var(--filter);
+            -webkit-backdrop-filter: var(--filter);
+        }
+
+        #toggleFullScreen:before {
+            opacity: .3;
+            content: '🖥';
+            transition: opacity .3s;
+        }
+
+        #toggleFullScreen:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #toggleFullScreen:hover:before {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -135,10 +166,13 @@
         <picture><img src="AppleWatch3.png"></picture>
     </label>
 </form>
+<button id="toggleFullScreen"></button>
 </body>
 <script defer>
     const params = new URLSearchParams(location.search),
-        formHandler = e => history.replaceState(null, null, '?' + new URLSearchParams(new FormData(e.currentTarget)))
+        formHandler = e => history.replaceState(null, null, '?' + new URLSearchParams(new FormData(e.currentTarget))),
+        requestFullscreen = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen
+    document.getElementById('toggleFullScreen').addEventListener('click', requestFullscreen.bind(document.documentElement))
     document.querySelectorAll(`[name]`).forEach(item => item.checked = params.has(item.name))
     document.forms.item(0).addEventListener('change', formHandler)
 </script>
