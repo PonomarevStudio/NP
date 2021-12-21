@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <title>Интерактивная презентация с подарками</title>
+    <style>
+        @font-face {
+            font-family: "Montserrat";
+            src: url("Montserrat-SemiBold.ttf");
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        * {
+            margin: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: "Montserrat", sans-serif;
+        }
+
+        :root {
+            background-image: url("background.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: black;
+            background-size: cover;
+            counter-reset: gifts;
+        }
+
+        html, body {
+            height: 100%;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img, picture, video, canvas, svg {
+            display: block;
+            max-width: 100%;
+        }
+
+        input, button, textarea, select {
+            font: inherit;
+        }
+
+        form {
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        label {
+            --filter: blur(25px);
+            --size: min(40vmin, 20vmax);
+            --margin: min(5vmin, 2.5vmax);
+            display: block;
+            cursor: pointer;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            position: relative;
+            width: var(--size);
+            height: var(--size);
+            border-radius: 100%;
+            margin: var(--margin);
+            counter-increment: gifts;
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: var(--filter);
+            -webkit-backdrop-filter: var(--filter);
+        }
+
+        input {
+            display: none;
+        }
+
+        label picture, label img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        picture:before {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: white;
+            display: flex;
+            position: absolute;
+            align-items: center;
+            justify-content: center;
+            content: counter(gifts);
+            transition: opacity .3s;
+            font-size: calc(var(--size) / 2);
+            background: radial-gradient(circle at center, #6f2d85, #7f2a7f 26%, #f81155);
+        }
+
+        label input:checked ~ picture:before {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+<form>
+    <label><input name="1" type="checkbox">
+        <picture><img src="MagicMouse.png"></picture>
+    </label>
+    <label><input name="2" type="checkbox">
+        <picture><img src="iPhone11.png"></picture>
+    </label>
+    <label><input name="3" type="checkbox">
+        <picture><img src="AirPods2.png"></picture>
+    </label>
+    <label><input name="4" type="checkbox">
+        <picture><img src="GalaxyA51.png"></picture>
+    </label>
+    <label style="background: rgba(255, 255, 255, 0.1);">
+        <input name="5" type="checkbox">
+        <picture><img src="set.png"></picture>
+    </label>
+    <label><input name="6" type="checkbox">
+        <picture><img src="iPhone11.png"></picture>
+    </label>
+    <label><input name="7" type="checkbox">
+        <picture><img src="AirPodsPro.png"></picture>
+    </label>
+    <label><input name="8" type="checkbox">
+        <picture><img src="AppleWatch3.png"></picture>
+    </label>
+</form>
+</body>
+<script defer>
+    const params = new URLSearchParams(location.search),
+        formHandler = e => history.replaceState(null, null, '?' + new URLSearchParams(new FormData(e.currentTarget)))
+    document.querySelectorAll(`[name]`).forEach(item => item.checked = params.has(item.name))
+    document.forms.item(0).addEventListener('change', formHandler)
+</script>
+</html>
