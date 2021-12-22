@@ -8,7 +8,7 @@
     <style>
         @font-face {
             font-family: "Montserrat";
-            src: url("Montserrat-SemiBold.ttf");
+            src: url("assets/Montserrat-SemiBold.ttf");
         }
 
         *, *::before, *::after {
@@ -24,7 +24,7 @@
 
         :root {
             --filter: blur(25px);
-            background-image: url("background.svg");
+            background-image: url("assets/images/background.svg");
             background-repeat: no-repeat;
             background-position: center;
             background-color: black;
@@ -145,39 +145,49 @@
 <body>
 <form>
     <label><input name="1" type="checkbox">
-        <picture><img src="MagicMouse.png"></picture>
+        <picture><img src="assets/images/MagicMouse.png"></picture>
     </label>
     <label><input name="2" type="checkbox">
-        <picture><img src="iPhone11.png"></picture>
+        <picture><img src="assets/images/iPhone11.png"></picture>
     </label>
     <label><input name="3" type="checkbox">
-        <picture><img src="AirPods2.png"></picture>
+        <picture><img src="assets/images/AirPods2.png"></picture>
     </label>
     <label><input name="4" type="checkbox">
-        <picture><img src="GalaxyA51.png"></picture>
+        <picture><img src="assets/images/GalaxyA51.png"></picture>
     </label>
     <label style="background: rgba(255, 255, 255, 0.1);">
         <input name="5" type="checkbox">
-        <picture><img src="set.png"></picture>
+        <picture><img src="assets/images/set.png"></picture>
     </label>
     <label><input name="6" type="checkbox">
-        <picture><img src="iPhone11.png"></picture>
+        <picture><img src="assets/images/iPhone11.png"></picture>
     </label>
     <label><input name="7" type="checkbox">
-        <picture><img src="AirPodsPro.png"></picture>
+        <picture><img src="assets/images/AirPodsPro.png"></picture>
     </label>
     <label><input name="8" type="checkbox">
-        <picture><img src="AppleWatch3.png"></picture>
+        <picture><img src="assets/images/AppleWatch3.png"></picture>
     </label>
 </form>
 <button id="toggleFullScreen"></button>
 </body>
 <script defer>
+    let buffer;
     const params = new URLSearchParams(location.search),
-        formHandler = e => history.replaceState(null, null, '?' + new URLSearchParams(new FormData(e.currentTarget))),
-        requestFullscreen = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen
+        formHandler = e => play() || history.replaceState(null, null, '?' + new URLSearchParams(new FormData(e.currentTarget))),
+        requestFullscreen = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen,
+        soundURL = 'assets/magic.wav', context = new AudioContext(), play = (source = context.createBufferSource()) => {
+            source.buffer = buffer;
+            source.connect(context.destination);
+            source.start();
+        }
     document.getElementById('toggleFullScreen').addEventListener('click', requestFullscreen.bind(document.documentElement))
     document.querySelectorAll(`[name]`).forEach(item => item.checked = params.has(item.name))
     document.forms.item(0).addEventListener('change', formHandler)
+    window.fetch(soundURL)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
+        .then(audioBuffer => buffer = audioBuffer);
 </script>
 </html>
